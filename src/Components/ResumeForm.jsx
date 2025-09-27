@@ -1,7 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
+import useForm from '../hooks/UseForm'
+import useResumeDownload from "../hooks/useResumeDownload";
 
 const ResumeForm = () => {
-    const [formData,setFormData]=useState({
+  //CUSTOM HOOK  
+  const [formData, ChangeHandler]=useForm({
         fullname:'',
         email:'',
         phoneNo:'',
@@ -12,13 +15,6 @@ const ResumeForm = () => {
     })
 
     const[errors,setErrors]=useState({})
-
-    const ChangeHandler=(e)=>{
-        setFormData(prev=>({
-            ...prev,
-            [e.target.name]:e.target.value
-        }))
-    }
 
     const validateForm=()=>{
       const errors={}
@@ -43,6 +39,38 @@ const ResumeForm = () => {
          console.log("Form submitted:", formData);
       }
     };
+
+    ///AI with JS logic
+  function generateSuggestions(formData) {
+  const suggestions = [];
+
+  // Skills check
+  if (!formData.skills.toLowerCase().includes('git')) {
+    suggestions.push("Consider adding 'Git' to your skillset.");
+  }
+  if (!formData.skills.toLowerCase().includes('api')) {
+    suggestions.push("Mention experience with APIs – REST or GraphQL.");
+  }
+
+  // Experience check
+  if (!formData.experience.toLowerCase().includes('project')) {
+    suggestions.push("Include at least one specific project in your experience.");
+  }
+
+  if (!formData.experience.toLowerCase().includes('team')) {
+    suggestions.push("Mention any teamwork or collaboration experience.");
+  }
+
+  return suggestions;
+}
+const [suggestions, setSuggestions] = useState([]);
+
+useEffect(() => {
+  const aiSuggestions = generateSuggestions(formData);
+  setSuggestions(aiSuggestions);
+}, [formData.skills, formData.experience]);
+
+const handleDownload = useResumeDownload(formData);
 
   return (
     <>
@@ -88,26 +116,22 @@ const ResumeForm = () => {
         <p className='flex py-5'><strong>Skills:</strong> {formData.skills}</p>
         <p className='flex py-5'><strong>Education:</strong> {formData.education}</p>
         <p className='flex py-5'><strong>Experience:</strong> {formData.experience}</p>
+        <div>
+      <button className='text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2' onClick={handleDownload}>Download PDF</button>
+    </div>
       </div>
     {/*AI Suggestion*/}
       <div className="mt-4 p-4 bg-blue-50 rounded shadow-md">
-        <h3 className="text-lg font-semibold mb-2">🧠 Smart Suggestions</h3>
-         <ul className=" list-inside text-sm text-blue-700">
-            <li> 
-              <svg className="w-5 h-5 me-2 text-green-500 dark:text-green-400 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-              </svg> Add more technical skills like Git, REST API</li>
-            <li> 
-              <svg className="w-5 h-5 me-2 text-green-500 dark:text-green-400 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-              </svg>Include project details in experience</li>
-            <li> 
-              <svg className="w-5 h-5 me-2 text-green-500 dark:text-green-400 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"/>
-              </svg>
-              Use action words like "Built", "Created", "Led"
-            </li>
+          <div className="bg-blue-50 mt-6 p-4 rounded">
+           <h3 className="font-semibold">🧠 Smart Suggestions</h3>
+           <ul className="list-disc list-inside text-blue-700 text-sm">
+            {suggestions.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
           </ul>
+          </div>
+
+
       </div>
       
     </div>
