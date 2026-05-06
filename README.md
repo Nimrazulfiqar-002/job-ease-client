@@ -40,4 +40,4 @@ Module 5: Job Recommender
   - match resume skills to job roles
   - display matching roles to user
 ## Architecture
-[https://github.com/Nimrazulfiqar-002/job-ease-client/blob/8e2a83741606d9210e16467362fe957ebe01bc94/jobEase-systemDiagram.png].imgealt('system design')
+!['systemDiagram'](https://github.com/Nimrazulfiqar-002/job-ease-client/blob/8e2a83741606d9210e16467362fe957ebe01bc94/jobEase-systemDiagram.png)
